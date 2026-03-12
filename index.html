@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conference Hub — Alternative Payments</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0a;
+  --surface: #141414;
+  --surface2: #1c1c1c;
+  --border: #252525;
+  --text: #e8e8e8;
+  --muted: #888;
+  --dim: #444;
+  --white: #fff;
+  --gray-wordmark: #888;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.65;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── SIDEBAR ── */
+#sidebar {
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  width: 260px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.logo-wrap {
+  padding: 22px 20px 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  text-decoration: none;
+}
+
+/* ── AP ICON (two converging pillars) ── */
+.logo svg {
+  width: 26px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.wordmark {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+.wordmark .w1 {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.01em;
+}
+.wordmark .w2 {
+  font-size: 13.5px;
+  font-weight: 400;
+  color: var(--gray-wordmark);
+  letter-spacing: -0.01em;
+}
+
+/* Switcher */
+.switcher {
+  margin: 14px 14px 10px;
+  display: flex;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 3px;
+  gap: 2px;
+}
+.sw-btn {
+  flex: 1;
+  padding: 6px 4px;
+  background: transparent;
+  border: none;
+  border-radius: 5px;
+  color: var(--muted);
+  font-size: 11.5px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all .15s;
+  text-align: center;
+}
+.sw-btn.on {
+  background: var(--surface2);
+  color: var(--white);
+  border: 1px solid var(--border);
+}
+
+/* Nav */
+.nav-group { flex: 1; padding-bottom: 12px; }
+.nav-label {
+  padding: 10px 20px 4px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 20px;
+  color: var(--muted);
+  font-size: 12.5px;
+  border-left: 2px solid transparent;
+  cursor: pointer;
+  transition: all .15s;
+  text-decoration: none;
+  user-select: none;
+}
+.nav-item:hover { color: var(--text); background: var(--surface2); }
+.nav-item.on { color: var(--white); border-left-color: var(--white); background: var(--surface2); }
+.nav-num { font-size: 10px; color: var(--dim); width: 16px; flex-shrink: 0; }
+
+/* Search */
+.search-wrap {
+  padding: 10px 14px 14px;
+  border-top: 1px solid var(--border);
+}
+.search-wrap input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 7px 11px;
+  color: var(--text);
+  font-size: 12.5px;
+  font-family: inherit;
+  outline: none;
+}
+.search-wrap input::placeholder { color: var(--dim); }
+.search-wrap input:focus { border-color: #333; }
+
+/* ── MAIN ── */
+#main { margin-left: 260px; flex: 1; }
+
+/* Topbar */
+.topbar {
+  position: sticky; top: 0;
+  background: rgba(10,10,10,.94);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 50;
+}
+.topbar-path { font-size: 12.5px; color: var(--muted); }
+.topbar-path span { color: var(--text); }
+.topbar-tag {
+  font-size: 11px;
+  color: var(--muted);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 9px;
+}
+
+/* Panels */
+.panel { display: none; }
+.panel.on { display: block; }
+
+/* Hero */
+.hero {
+  padding: 52px 44px 36px;
+  border-bottom: 1px solid var(--border);
+}
+.hero-eye {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 12px;
+}
+.hero h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -.025em;
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.hero-sub { font-size: 12.5px; color: var(--muted); margin-bottom: 18px; }
+.hero-desc {
+  max-width: 640px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+/* Stats */
+.stats {
+  display: flex;
+  gap: 14px;
+  padding: 24px 44px;
+  border-bottom: 1px solid var(--border);
+}
+.stat {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 18px;
+}
+.stat-l { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); margin-bottom: 5px; }
+.stat-v { font-size: 20px; font-weight: 700; color: var(--white); }
+.stat-d { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+
+/* Body */
+.body { padding: 0 44px 80px; }
+
+/* Section */
+.section { border-bottom: 1px solid var(--border); }
+.sec-hdr {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 26px 0 22px;
+  cursor: pointer;
+  user-select: none;
+}
+.sec-hdr:hover .sec-title { color: var(--white); }
+.sec-num {
+  width: 30px; height: 30px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: var(--muted);
+  flex-shrink: 0;
+}
+.sec-title { font-size: 17px; font-weight: 600; color: var(--text); letter-spacing: -.01em; transition: color .15s; }
+.chevron { margin-left: auto; color: var(--dim); font-size: 14px; transition: transform .2s; }
+.chevron.open { transform: rotate(180deg); }
+.sec-body { display: none; padding-bottom: 26px; }
+.sec-body.open { display: block; }
+
+/* Sub */
+.sub { margin-bottom: 24px; }
+.sub:last-child { margin-bottom: 0; }
+.sub-title { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 10px; }
+.sub-text { font-size: 13.5px; color: var(--muted); line-height: 1.7; }
+.sub-text p { margin-bottom: 9px; }
+.sub-text p:last-child { margin-bottom: 0; }
+
+/* List */
+ul.ap { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+ul.ap li {
+  display: flex; align-items: flex-start; gap: 9px;
+  font-size: 13.5px; color: var(--muted); line-height: 1.55;
+}
+ul.ap li::before {
+  content: '';
+  width: 4px; height: 4px;
+  background: var(--dim);
+  border-radius: 50%;
+  margin-top: 9px;
+  flex-shrink: 0;
+}
+
+/* Cards */
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; margin-top: 4px; }
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.card-title { font-size: 12.5px; font-weight: 600; color: var(--white); margin-bottom: 8px; }
+.card-body { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+/* Callout */
+.callout {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--white);
+  border-radius: 0 6px 6px 0;
+  padding: 13px 16px;
+  margin: 14px 0;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* Timeline */
+.timeline { display: flex; flex-direction: column; }
+.tl-item { display: flex; gap: 18px; position: relative; }
+.tl-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 16px; top: 36px; bottom: 0;
+  width: 1px; background: var(--border);
+}
+.tl-dot {
+  width: 32px; height: 32px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: var(--muted);
+  flex-shrink: 0; margin-top: 8px; z-index: 1;
+}
+.tl-body { flex: 1; padding: 8px 0 26px; }
+.tl-label { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 9px; }
+.tl-tag {
+  display: inline-block;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 4px; padding: 1px 8px;
+  font-size: 10.5px; color: var(--muted); font-weight: 400; margin-left: 8px; vertical-align: middle;
+}
+
+/* Do/Don't */
+.dd { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; margin-top: 4px; }
+.do-box, .dont-box {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px;
+}
+.do-box { border-top: 2px solid #3d7a5a; }
+.dont-box { border-top: 2px solid #7a3d3d; }
+.do-lbl { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #5ab57a; margin-bottom: 9px; }
+.dont-lbl { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #b55a5a; margin-bottom: 9px; }
+
+/* Openers */
+.opener {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 6px; padding: 11px 15px;
+  font-size: 13.5px; color: var(--muted); margin-bottom: 8px;
+}
+
+/* Competitor table */
+.comp-table { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+.comp-row {
+  display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+}
+.comp-name {
+  width: 155px; min-width: 155px; padding: 13px 15px;
+  background: var(--surface); font-size: 12.5px; font-weight: 600; color: var(--white);
+  border-right: 1px solid var(--border);
+  display: flex; align-items: center;
+}
+.comp-notes { flex: 1; padding: 13px 15px; background: var(--bg); }
+.comp-note {
+  font-size: 12.5px; color: var(--muted); line-height: 1.5;
+  padding: 2px 0; display: flex; gap: 7px; align-items: flex-start;
+}
+.comp-note::before { content: '·'; color: var(--dim); flex-shrink: 0; }
+
+/* Divider */
+.divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+/* Search hide */
+.hidden { display: none !important; }
+
+/* Responsive */
+@media(max-width: 860px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  .hero, .stats, .body { padding-left: 18px; padding-right: 18px; }
+  .grid, .dd { grid-template-columns: 1fr; }
+  .stats { flex-wrap: wrap; }
+}
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="logo-wrap">
+    <a class="logo" href="#">
+      <svg viewBox="0 0 44 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1 0 L16 0 L22 50 L1 50 Z" fill="white"/>
+        <path d="M43 0 L28 0 L22 50 L43 50 Z" fill="white"/>
+      </svg>
+      <div class="wordmark">
+        <span class="w1">Alternative</span>
+        <span class="w2">Payments</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="switcher">
+    <button class="sw-btn on" onclick="show('playbook',this)">Playbook</button>
+    <button class="sw-btn" onclick="show('attendee',this)">Attendee Guide</button>
+  </div>
+
+  <div class="nav-group">
+
+    <div id="nav-playbook">
+      <div class="nav-label">Conference Playbook</div>
+      <div class="nav-item on" onclick="jump('p1',this)"><span class="nav-num">01</span>Goals &amp; Success</div>
+      <div class="nav-item" onclick="jump('p2',this)"><span class="nav-num">02</span>Team &amp; Attendance</div>
+      <div class="nav-item" onclick="jump('p3',this)"><span class="nav-num">03</span>Setup &amp; On-Site</div>
+      <div class="nav-item" onclick="jump('p4',this)"><span class="nav-num">04</span>Assets &amp; Materials</div>
+      <div class="nav-item" onclick="jump('p5',this)"><span class="nav-num">05</span>Pre-Conference</div>
+      <div class="nav-item" onclick="jump('p6',this)"><span class="nav-num">06</span>Communication</div>
+      <div class="nav-item" onclick="jump('p7',this)"><span class="nav-num">07</span>Post-Conference</div>
+    </div>
+
+    <div id="nav-attendee" style="display:none">
+      <div class="nav-label">Attendee Guide</div>
+      <div class="nav-item on" onclick="jump('a1',this)">Representing the Company</div>
+      <div class="nav-item" onclick="jump('a2',this)">Dress Code</div>
+      <div class="nav-item" onclick="jump('a3',this)">On-Site Expectations</div>
+      <div class="nav-item" onclick="jump('a4',this)">Networking &amp; Openers</div>
+      <div class="nav-item" onclick="jump('a5',this)">Booth Etiquette</div>
+      <div class="nav-item" onclick="jump('a6',this)">Setup &amp; Breakdown</div>
+      <div class="nav-item" onclick="jump('a7',this)">Handling Questions</div>
+      <div class="nav-item" onclick="jump('a8',this)">Competitor Awareness</div>
+      <div class="nav-item" onclick="jump('a9',this)">Professional Conduct</div>
+      <div class="nav-item" onclick="jump('a10',this)">Defining Success</div>
+    </div>
+
+  </div>
+
+  <div class="search-wrap">
+    <input type="text" placeholder="Search…" oninput="search(this.value)">
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main id="main">
+
+  <div class="topbar">
+    <div class="topbar-path">Alternative Payments / <span id="doc-title">Conference Playbook 2026</span></div>
+    <div class="topbar-tag">March 2026</div>
+  </div>
+
+  <!-- ════════════════════════════════════
+       PLAYBOOK PANEL
+  ════════════════════════════════════ -->
+  <div id="panel-playbook" class="panel on">
+
+    <div class="hero">
+      <div class="hero-eye">Conference Playbook &amp; Event Guide</div>
+      <h1>Conference<br>Playbook 2026</h1>
+      <div class="hero-sub">Last updated March 2026 · 7 sections</div>
+      <div class="hero-desc">How Alternative Payments evaluates, plans, executes, and follows up on conferences — ensuring alignment with company goals, clear expectations, standardized execution, and measurable ROI.</div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="stat-l">Meeting Target</div><div class="stat-v">&lt;14 days</div><div class="stat-d">Time to meet post-event</div></div>
+      <div class="stat"><div class="stat-l">Asset Approval</div><div class="stat-v">4–8 wks</div><div class="stat-d">Non-core asset lead time</div></div>
+      <div class="stat"><div class="stat-l">Strategy Planning</div><div class="stat-v">8–12 wks</div><div class="stat-d">Early amplification window</div></div>
+      <div class="stat"><div class="stat-l">Lead Routing</div><div class="stat-v">0–3 days</div><div class="stat-d">Post-event immediate actions</div></div>
+    </div>
+
+    <div class="body">
+
+      <!-- P1 -->
+      <div class="section" id="p1">
+        <div class="sec-hdr" onclick="toggle('p1b',this)">
+          <div class="sec-num">1</div>
+          <div class="sec-title">Conference Goals &amp; Success Criteria</div>
+          <div class="chevron open">▾</div>
+        </div>
+        <div class="sec-body open" id="p1b">
+          <div class="sub">
+            <div class="sub-title">1.1 Why We Attend Conferences</div>
+            <ul class="ap">
+              <li>Pipeline generation or revenue influence</li>
+              <li>Brand awareness</li>
+              <li>Customer retention or expansion</li>
+              <li>Partner recruitment or enablement</li>
+              <li>Market intelligence (competitors, trends, feedback)</li>
+            </ul>
+          </div>
+          <div class="sub">
+            <div class="sub-title">1.2 Defining Success</div>
+            <div class="sub-text"><p>Before committing to an event, success metrics are defined as:</p></div>
+            <div class="grid" style="margin-top:12px">
+              <div class="card"><div class="card-title">Lead Metrics</div><div class="card-body"><ul class="ap"><li>Booth traffic — leads scanned</li><li>Demos booked on-site</li><li>Time to meet (target: &lt;14 days)</li></ul></div></div>
+              <div class="card"><div class="card-title">Pipeline Metrics</div><div class="card-body"><ul class="ap"><li>Pipeline created</li><li>Deals influenced (existing pipeline touched)</li><li>Post-event opportunities created</li></ul></div></div>
+              <div class="card"><div class="card-title">Content Metrics</div><div class="card-body"><ul class="ap"><li>Content captured on-site</li><li>Brand exposure generated</li></ul></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P2 -->
+      <div class="section" id="p2">
+        <div class="sec-hdr" onclick="toggle('p2b',this)">
+          <div class="sec-num">2</div>
+          <div class="sec-title">Conference Team &amp; Attendance Criteria</div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="sec-body" id="p2b">
+          <div class="sub">
+            <div class="sub-title">2.1 Who Attends</div>
+            <div class="sub-text"><p>Attendance is determined by event objectives, expected business impact, and role alignment. AEs are the primary sales presence; BDRs provide support where appropriate.</p></div>
+            <div class="grid" style="margin-top:12px">
+              <div class="card"><div class="card-title">Partner / Channel Events</div><div class="card-body">Leadership, partner-facing Sales roles, and Marketing attend to support partner growth and strategic relationships.</div></div>
+              <div class="card"><div class="card-title">Brand / Thought Leadership</div><div class="card-body">Marketing and Leadership attend to support visibility and positioning, with selective Sales participation when appropriate.</div></div>
+            </div>
+          </div>
+          <div class="sub">
+            <div class="sub-title">2.2 Sales Participation Guidelines</div>
+            <div class="sub-text"><p>Attendance for BDRs and AEs considers: alignment with event goals and ICP, presence of target accounts or pre-booked meetings, timing within the quarter and active deal cycles, and expected revenue impact vs. time out of market.</p></div>
+            <div class="grid" style="margin-top:12px">
+              <div class="card"><div class="card-title">Account Executives</div><div class="card-body"><ul class="ap"><li>Primary sales presence at conferences</li><li>Focus on scheduling meetings, strategic conversations, and pipeline advancement</li></ul></div></div>
+              <div class="card"><div class="card-title">Business Development Reps</div><div class="card-body"><ul class="ap"><li>Supplementary support for lead capture and qualification</li><li>Assist with meeting scheduling and follow-up coordination</li><li>Support AEs in maximizing coverage</li></ul></div></div>
+            </div>
+          </div>
+          <div class="sub">
+            <div class="sub-title">2.3 Fairness, Rotation &amp; Approval</div>
+            <div class="callout">Sales participation requires alignment with the individual's manager. Final approval rests with Marketing and Leadership. Attendance opportunities are rotated when feasible — willingness to travel is considered but does not guarantee attendance.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P3 -->
+      <div class="section" id="p3">
+        <div class="sec-hdr" onclick="toggle('p3b',this)">
+          <div class="sec-num">3</div>
+          <div class="sec-title">Conference Setup &amp; On-Site Expectations</div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="sec-body" id="p3b">
+          <div class="sub">
+            <div class="sub-title">3.1 Booth Setup</div>
+            <div class="grid" style="margin-top:4px">
+              <div class="card"><div class="card-title">Brand Display</div><div class="card-body"><ul class="ap"><li>Branded banner(s) &amp; backdrop</li><li>Tablecloth &amp; table tents</li></ul></div></div>
+              <div class="card"><div class="card-title">Engagement Tools</div><div class="card-body"><ul class="ap"><li>Mac desktop for demos</li><li>Tablets for meeting booking &amp; lead capture</li><li>Collateral (one-pagers, pamphlets)</li></ul></div></div>
+              <div class="card"><div class="card-title">Extras</div><div class="card-body"><ul class="ap"><li>Swag</li></ul></div></div>
+            </div>
+            <div class="sub-text" style="margin-top:12px"><p>All team members are expected to assist with booth setup and breakdown.</p></div>
+          </div>
+          <div class="sub">
+            <div class="sub-title">3.2 Employee Expectations On-Site</div>
+            <div class="sub-text"><p>Be present, engaged, and professional — actively initiating conversations, representing the brand, and capturing notes for follow-up.</p></div>
+            <div class="divider"></div>
+            <div class="sub-title" style="font-size:12px; color:var(--muted); font-weight:500; margin-bottom:8px">Dress Code</div>
+            <ul class="ap">
+              <li>Branded ¼ zip or polo</li>
+              <li>Dark jeans (no rips/stains/tears), black pants, or beige pants</li>
+              <li>Clean sneakers — white or black</li>
+            </ul>
+            <div class="divider"></div>
+            <div class="sub-title" style="font-size:12px; color:var(--muted); font-weight:500; margin-bottom:8px">Booth Conduct</div>
+            <ul class="ap">
+              <li>No eating or chewing gum at the booth — water only</li>
+              <li>Other beverages away from the booth area</li>
+              <li>Alcohol only at designated networking events, always moderate</li>
+              <li>Booth must remain staffed at all times — coordinate before stepping away</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- P4 -->
+      <div class="section" id="p4">
+        <div class="sec-hdr" onclick="toggle('p4b',this)">
+          <div class="sec-num">4</div>
+          <div class="sec-title">Conference Assets &amp; Materials</div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="sec-body" id="p4b">
+          <div class="sub">
+            <div class="sub-title">4.1 Core Assets</div>
+            <ul class="ap">
+              <li>Branded banner(s) &amp; backdrop</li>
+              <li>Tablecloth &amp; table tents</li>
+              <li>Collateral (one-pagers, pamphlets)</li>
+              <li>Mac desktop computer for demos</li>
+              <li>Tablets for booking meetings and capturing attendee information</li>
+              <li>Swag</li>
+            </ul>
+            <div class="callout" style="margin-top:14px">The Events &amp; Community Manager owns the inventory list and identifies gaps well before each event.</div>
+          </div>
+          <div class="sub">
+            <div class="sub-title">4.2 Non-Core &amp; Event-Specific Assets</div>
+            <div class="grid" style="margin-top:4px">
+              <div class="card"><div class="card-title">Vertical-Specific Materials</div><div class="card-body">Printed or digital materials tailored to specific industries (Accounting, Pool Services, etc.) when the event audience requires targeted messaging.</div></div>
+              <div class="card"><div class="card-title">Conference-Specific Offers</div><div class="card-body">Special promos or incentives created exclusively for event attendees when aligned with Sales and Marketing strategy.</div></div>
+              <div class="card"><div class="card-title">Speaking &amp; Sponsored Sessions</div><div class="card-body">Presentation decks, one-pagers, or signage for speaking engagements or sponsored sessions.</div></div>
+              <div class="card"><div class="card-title">Campaign-Driven Materials</div><div class="card-body">Assets tied to a specific campaign, product launch, or initiative being highlighted at the event.</div></div>
+            </div>
+          </div>
+          <div class="sub">
+            <div class="sub-title">4.3 Asset Planning &amp; Approval</div>
+            <div class="sub-text"><p>Non-core assets should be planned and approved <strong style="color:var(--text)">4–8 weeks in advance</strong>. The Events &amp; Community Manager works with Marketing to determine what's needed for each event.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P5 -->
+      <div class="section" id="p5">
+        <div class="sec-hdr" onclick="toggle('p5b',this)">
+          <div class="sec-num">5</div>
+          <div class="sec-title">Pre-Conference Playbook</div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="sec-body" id="p5b">
+          <div class="timeline">
+
+            <div class="tl-item">
+              <div class="tl-dot">1</div>
+              <div class="tl-body">
+                <div class="tl-label">Early Strategy &amp; Amplification <span class="tl-tag">8–12 weeks out</span></div>
+                <ul class="ap"><li>Identify vendors, partners, or collaborators for cross-marketing</li><li>Evaluate digital cross-promotion opportunities before, during, and after the event</li><li>Assess co-hosted events, meetups, or joint collateral with other vendors</li><li>Align internally on messaging, ownership, and execution for approved partner activities</li></ul>
+              </div>
+            </div>
+
+            <div class="tl-item">
+              <div class="tl-dot">2</div>
+              <div class="tl-body">
+                <div class="tl-label">Multimedia &amp; Content Planning <span class="tl-tag">8–12 weeks out</span></div>
+                <ul class="ap"><li>Determine whether videography and/or photography is needed</li><li>Define content objectives (brand, product, partner, or prospect)</li><li>Confirm availability and scope for multimedia support</li><li>Include Multimedia Content Creator in travel planning if required</li></ul>
+              </div>
+            </div>
+
+            <div class="tl-item">
+              <div class="tl-dot">3</div>
+              <div class="tl-body">
+                <div class="tl-label">Event Planning &amp; Logistics <span class="tl-tag">4–8 weeks out</span></div>
+                <ul class="ap"><li>Confirm event goals and success metrics</li><li>Finalize internal attendees</li><li>Secure sponsorship details and confirm all deliverables</li><li>Book travel and hotel accommodations</li><li>Confirm booth logistics, shipping requirements, and key deadlines</li></ul>
+              </div>
+            </div>
+
+            <div class="tl-item">
+              <div class="tl-dot">4</div>
+              <div class="tl-body">
+                <div class="tl-label">Execution Readiness &amp; Coordination <span class="tl-tag">2–4 weeks out</span></div>
+                <ul class="ap"><li>Align Sales and Marketing on goals, target accounts, and key messaging</li><li>Schedule meetings with prospects, customers, and partners</li><li>Confirm event-specific scheduling page is live and functioning</li><li>Determine if a shoulder event is appropriate — go/no-go at least 1 month prior</li><li>Finalize demos, talking points, and booth messaging</li><li>Review lead capture process and post-event follow-up expectations</li></ul>
+              </div>
+            </div>
+
+            <div class="tl-item">
+              <div class="tl-dot">5</div>
+              <div class="tl-body">
+                <div class="tl-label">Final Prep &amp; On-Site Readiness <span class="tl-tag">1 week out</span></div>
+                <ul class="ap"><li>Conduct internal event briefing covering goals, schedule, and expectations</li><li>Confirm on-site roles, booth coverage, and meeting ownership</li><li>Reconfirm travel, hotel, and shipping details</li><li>Ensure lead capture tools are tested and ready</li></ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- P6 -->
+      <div class="section" id="p6">
+        <div class="sec-hdr" onclick="toggle('p6b',this)">
+          <div class="sec-num">6</div>
+          <div class="sec-title">Conference Communication Strategy</div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="sec-body" id="p6b">
+          <div class="sub">
+            <div class="sub-title">6.1 Internal Communication</div>
+            <div class="grid" style="margin-top:4px">
+              <div class="card"><div class="card-title">Before</div><div class="card-body"><ul class="ap"><li>Share conference details via Slack and the conference tracker (goals, attendees, key meetings)</li><li>Align teams on why the event matters and what success looks like</li></ul></div></div>
+              <div class="card"><div class="card-title">During</div><div class="card-body"><ul class="ap"><li>Share brief updates (demos booked, meetings scheduled)</li><li>Provide visibility into on-site activity and momentum</li></ul></div></div>
+              <div class="card"><div class="card-title">After</div><div class="card-body"><ul class="ap"><li>Document what worked, what didn't, and recommendations for next time</li><li>Distribute post-event recap (outcomes, results, next steps)</li><li>Share key takeaways, pipeline indicators, and feedback</li></ul></div></div>
+            </div>
+          </div>
+          <div class="sub">
+            <div class="sub-title">6.2 External Communication</div>
+            <div class="grid" style="margin-top:4px">
+              <div class="card"><div class="card-title">Before</div><div class="card-body"><ul class="ap"><li>Notify partners and prospects via email/outreach</li><li>Proactively identify who is attending the event</li><li>Schedule meetings and shoulder events with high-priority accounts</li></ul></div></div>
+              <div class="card"><div class="card-title">During</div><div class="card-body"><ul class="ap"><li>Engage attendees through pre-scheduled meetings and on-site conversations</li><li>Share light social or event presence where appropriate</li></ul></div></div>
+              <div class="card"><div class="card-title">After</div><div class="card-body"><ul class="ap"><li>Follow up with all meetings, leads, and relevant attendees</li><li>Tailor follow-up messaging based on event conversations</li><li>Reinforce next steps and engagement opportunities</li></ul></div></div>
+            </div>
+          </div>
+          <div class="sub">
+            <div class="sub-title">6.3 Ownership &amp; Alignment</div>
+            <div class="grid" style="margin-top:4px">
+              <div class="card"><div class="card-title">Marketing</div><div class="card-body">Owns overall conference communication strategy and coordination.</div></div>
+              <div class="card"><div class="card-title">Sales</div><div class="card-body">Owns direct outreach and meeting follow-up with assigned accounts.</div></div>
+              <div class="card"><div class="card-title">Leadership</div><div class="card-body">Participates in strategic or high-value communications as needed.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P7 -->
+      <div class="section" id="p7">
+        <div class="sec-hdr" onclick="toggle('p7b',this)">
+          <div class="sec-num">7</div>
+          <div class="sec-title">Post-Conference Playbook</div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="sec-body" id="p7b">
+          <div class="timeline">
+
+            <div class="tl-item">
+              <div class="tl-dot">⚡</div>
+              <div class="tl-body">
+                <div class="tl-label">Immediate Actions <span class="tl-tag">0–3 days post-event</span></div>
+                <ul class="ap"><li>Demos booked at the conference are automatically routed to the appropriate AE</li><li>All leads collected are routed to Sales by the Events &amp; Community Manager</li><li>Marketing partners with Sales leadership to review, qualify, and assign leads to BDRs</li><li>Capture notes and context from on-site conversations for each lead</li><li>Send thank-you follow-ups to all partners, customers, and prospects met at the event</li><li>Complete a conference summary (overview, highlights, ROI)</li></ul>
+              </div>
+            </div>
+
+            <div class="tl-item">
+              <div class="tl-dot">📅</div>
+              <div class="tl-body">
+                <div class="tl-label">Short-Term Follow-Up <span class="tl-tag">1–2 weeks post-event</span></div>
+                <ul class="ap"><li>Sales conducts timely follow-up on all assigned leads and meetings</li><li>Marketing launches coordinated follow-up campaigns aligned to event messaging</li><li>Meetings, demos, and next steps are scheduled as appropriate</li></ul>
+              </div>
+            </div>
+
+            <div class="tl-item">
+              <div class="tl-dot">📊</div>
+              <div class="tl-body">
+                <div class="tl-label">Long-Term Evaluation <span class="tl-tag">Ongoing</span></div>
+                <ul class="ap"><li>Track pipeline influence, opportunity progression, and closed-won revenue tied to the event</li><li>Gather feedback from Sales, Marketing, and attendees on event effectiveness</li></ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════
+       ATTENDEE PANEL
+  ════════════════════════════════════ -->
+  <div id="panel-attendee" class="panel">
+
+    <div class="hero">
+      <div class="hero-eye">Conference Attendee Guide</div>
+      <h1>Attendee<br>Guide 2026</h1>
+      <div class="hero-sub">Last updated March 2026 · 10 sections</div>
+      <div class="hero-desc">Your field reference for representing Alternative Payments at conferences — covering dress code, on-site conduct, networking, booth etiquette, competitor awareness, and what success looks like.</div>
+    </div>
+
+    <div class="body">
+
+      <!-- A1 -->
+      <div class="section" id="a1">
+        <div class="sec-hdr" onclick="toggle('a1b',this)">
+          <div class="sec-num">↗</div>
+          <div class="sec-title">Representing the Company</div>
+          <div class="chevron open">▾</div>
+        </div>
+        <div class="sec-body open" id="a1b">
+          <div class="sub-text"><p>You are a brand ambassador at every event. How you dress, speak, and engage directly reflects on the company.</p></div>
+          <ul class="ap" style="margin-top:10px">
+            <li>Be professional, approachable, and respectful at all times</li>
+            <li>Assume every interaction could influence a partnership, sale, or referral</li>
+            <li>When in doubt, default to being helpful and curious rather than salesy</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- A2 -->
+      <div class="section" id="a2">
+        <div class="sec-hdr" onclick="toggle('a2b',this)">
+          <div class="sec-num">👔</div>
+          <div class="sec-title">Dress Code</div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="sec-body" id="a2b">
+          <div class="sub-text"><p style="margin-bottom:14px">All booth staff will wear the same branded gear — you'll receive clear guidance on what to wear each day.</p></div>
+          <div class="dd">
+            <div class="do-box">
+              <div class="do-lbl">✓ Wear</div>
+              <ul class="ap"><li>Branded ¼ zip or polo (no outdated logos)</li><li>Dark jeans (no rips/stains/tears), black or beige pants</li><li>Clean sneakers — white or black, suitable for long standing</li><li>Layers (exhibit halls are unpredictable)</li></ul>
+            </div>
+            <div class="dont-box">
+              <div class="dont-lbl">✗ Avoid</div>
+              <ul class="ap"><li>Gym wear, cargo pants, overly distressed clothing</li><li>Flip flops, sandals, or high heels</li><li>Anything overly revealing or distracting</li></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- A3 -->
+      <div class="section" id="a3">
+        <div class="sec-hdr" onclick="toggle('a3b',this)">
+          <div class="sec-num">📍</div>
+          <div class="sec-title">On-Site Expectations</div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="sec-body" id="a3b">
+          <div class="grid">
+            <div class="card"><div class="card-title">Before</div><div class="card-body"><ul class="ap"><li>Review the event agenda and attendee list</li><li>Understand our goals (brand awareness, demos, partnerships)</li><li>Know our product, positioning, and current priorities</li></ul></div></div>
+            <div class="card"><div class="card-title">During</div><div class="card-body"><ul class="ap"><li>Arrive early — phones away during conversations</li><li>Take brief notes after meaningful conversations</li><li>Be mindful of alcohol consumption at social events</li></ul></div></div>
+            <div class="card"><div class="card-title">After</div><div class="card-body"><ul class="ap"><li>Share notable takeaways, leads, or feedback with the team</li><li>Flag any follow-ups that should happen quickly</li></ul></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- A4 -->
+      <div class="section" id="a4">
+        <div class="sec-hdr" onclick="toggle('a4b',this)">
+          <div class="sec-num">💬</div>
+          <div class="sec-title">Networking &amp; Conversation Starters</div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="sec-body" id="a4b">
+          <div class="sub">
+            <div class="sub-title">Build Rapport First — Don't Pitch Immediately</div>
+            <div class="sub-text" style="margin-bottom:12px"><p>Easy openers:</p></div>
+            <div class="opener">"What brought you to the conference?"</div>
+            <div class="opener">"Have you attended this event before?"</div>
+            <div class="opener">"What sessions are you most excited about?"</div>
+            <div class="opener">"What's been the most useful thing you've learned so far?"</div>
+            <div class="sub-text" style="margin:16px 0 10px"><p>Naturally introducing what we do:</p></div>
+            <div class="opener">"I'm with Alternative Payments — we work with MSPs on solving revenue workflow challenges. What about you?"</div>
+            <div class="opener">"A lot of folks here are talking about [relevant theme]. Is that something you're seeing too?"</div>
+            <div class="callout" style="margin-top:14px">Ask open-ended questions · Listen more than you talk · Avoid hard selling unless someone explicitly asks</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- A5 -->
+      <div class="section" id="a5">
+        <div class="sec-hdr" onclick="toggle('a5b',this)">
+          <div class="sec-num">🏪</div>
+          <div class="sec-title">Booth &amp; Sponsored Event Etiquette</div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="sec-body" id="a5b">
+          <ul class="ap">
+            <li>Greet attendees warmly — eye contact and a smile go a long way</li>
+            <li>During exhibit hall hours, the booth must always be staffed — coordinate before stepping away</li>
+            <li>Avoid sitting, eating, or drinking anything other than water at the booth</li>
+            <li>Stay off your phone at the booth</li>
+            <li>Keep conversations concise when traffic is high</li>
+            <li>Know when to pull in another teammate for deeper questions</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- A6 -->
+      <div class="section" id="a6">
+        <div class="sec-hdr" onclick="toggle('a6b',this)">
+          <div class="sec-num">🔧</div>
+          <div class="sec-title">Booth Setup &amp; Breakdown</div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="sec-body" id="a6b">
+          <div class="sub-text" style="margin-bottom:14px"><p>Setup and breakdown are team responsibilities regardless of role or title.</p></div>
+          <div class="dd">
+            <div class="do-box">
+              <div class="do-lbl">Setup</div>
+              <ul class="ap"><li>Arrive on time (or early)</li><li>Assist with unloading, assembling, organizing, and tidying</li><li>Ensure the booth is clean and ready before attendees arrive</li><li>If a task isn't obvious, ask how you can help</li></ul>
+            </div>
+            <div class="dont-box">
+              <div class="dont-lbl" style="color:var(--muted)">Breakdown</div>
+              <ul class="ap"><li>Plan to stay through the end of the event</li><li>Assist with packing, dismantling, and loading materials</li><li>Do not disappear early or assume others will handle it</li></ul>
+            </div>
+          </div>
+          <div class="callout" style="margin-top:14px">If you have a conflict that impacts setup or breakdown, communicate it in advance with the Events &amp; Community Manager.</div>
+        </div>
+      </div>
+
+      <!-- A7 -->
+      <div class="section" id="a7">
+        <div class="sec-hdr" onclick="toggle('a7b',this)">
+          <div class="sec-num">❓</div>
+          <div class="sec-title">Handling Common Questions</div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="sec-body" id="a7b">
+          <div class="sub-text"><p style="margin-bottom:10px">If you don't know the answer:</p></div>
+          <ul class="ap">
+            <li>Be honest: "That's a great question — I want to make sure I get you the right answer."</li>
+            <li>Offer to connect them with the right person</li>
+            <li>Capture their info for follow-up</li>
+          </ul>
+          <div class="callout" style="margin-top:14px"><strong style="color:var(--text)">Never guess or overpromise.</strong></div>
+        </div>
+      </div>
+
+      <!-- A8 -->
+      <div class="section" id="a8">
+        <div class="sec-hdr" onclick="toggle('a8b',this)">
+          <div class="sec-num">🔍</div>
+          <div class="sec-title">Competitor Awareness</div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="sec-body" id="a8b">
+          <div class="sub-text" style="margin-bottom:14px"><p>You don't need to lead with competitive talk, but be prepared if prospects ask. Stay factual and respectful — focus on <em>fit</em>, tradeoffs, and customer experience.</p></div>
+          <div class="comp-table">
+            <div class="comp-row">
+              <div class="comp-name">ConnectBooster</div>
+              <div class="comp-notes">
+                <div class="comp-note">Kaseya-owned, bundled approach</div>
+                <div class="comp-note">Multiple fees and systems can create client confusion</div>
+                <div class="comp-note">Fee pass-through often results in multiple invoices</div>
+              </div>
+            </div>
+            <div class="comp-row">
+              <div class="comp-name">WisePay</div>
+              <div class="comp-notes">
+                <div class="comp-note">Bundled within ConnectWise</div>
+                <div class="comp-note">Historically lower adoption due to onboarding friction</div>
+                <div class="comp-note">Older customer portal experience</div>
+              </div>
+            </div>
+            <div class="comp-row">
+              <div class="comp-name">FlexPoint</div>
+              <div class="comp-notes">
+                <div class="comp-note">Newer player in the market</div>
+                <div class="comp-note">Smaller footprint and support org vs. more established tools</div>
+              </div>
+            </div>
+            <div class="comp-row">
+              <div class="comp-name">QuickBooks Payments</div>
+              <div class="comp-notes">
+                <div class="comp-note">Horizontal solution — not MSP-specific</div>
+                <div class="comp-note">Limited PSA-first workflows</div>
+                <div class="comp-note">No dedicated customer payment portal</div>
+              </div>
+            </div>
+          </div>
+          <div class="callout" style="margin-top:14px">"Different tools work for different MSPs. We tend to work best with teams who care about a clean payment experience and want to reduce friction for both their staff and their clients."</div>
+        </div>
+      </div>
+
+      <!-- A9 -->
+      <div class="section" id="a9">
+        <div class="sec-hdr" onclick="toggle('a9b',this)">
+          <div class="sec-num">🤝</div>
+          <div class="sec-title">Professional Conduct</div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="sec-body" id="a9b">
+          <div class="dd">
+            <div class="do-box">
+              <div class="do-lbl">Always</div>
+              <ul class="ap"><li>Be respectful to teammates, attendees, vendors, and event staff</li><li>Keep conversations inclusive and appropriate</li><li>Follow all event rules and venue policies</li></ul>
+            </div>
+            <div class="dont-box">
+              <div class="dont-lbl">Never</div>
+              <ul class="ap"><li>Speak negatively about competitors, customers, or partners</li><li>Share confidential or internal-only information</li><li>Engage in arguments or heated discussions</li></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- A10 -->
+      <div class="section" id="a10">
+        <div class="sec-hdr" onclick="toggle('a10b',this)">
+          <div class="sec-num">🏆</div>
+          <div class="sec-title">Defining Success</div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="sec-body" id="a10b">
+          <div class="sub-text" style="margin-bottom:14px"><p>A successful conference isn't just about leads.</p></div>
+          <div class="grid">
+            <div class="card"><div class="card-title">Relationships</div><div class="card-body">Strong conversations and relationships built with prospects, partners, and peers.</div></div>
+            <div class="card"><div class="card-title">Market Intelligence</div><div class="card-body">Clear learnings about the market, customer pain points, or industry trends.</div></div>
+            <div class="card"><div class="card-title">Brand Perception</div><div class="card-body">Positive brand perception and memorable impressions left with attendees.</div></div>
+            <div class="card"><div class="card-title">Actionable Follow-Ups</div><div class="card-body">Follow-ups that convert conversations into pipeline after the event.</div></div>
+          </div>
+          <div class="callout" style="margin-top:14px">If you're unsure about expectations, attire, or goals for a specific event — reach out to the Events &amp; Community Manager before the conference.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<script>
+function show(tab, btn) {
+  document.getElementById('panel-playbook').classList.toggle('on', tab === 'playbook');
+  document.getElementById('panel-attendee').classList.toggle('on', tab === 'attendee');
+  document.getElementById('nav-playbook').style.display = tab === 'playbook' ? '' : 'none';
+  document.getElementById('nav-attendee').style.display = tab === 'attendee' ? '' : 'none';
+  document.querySelectorAll('.sw-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('doc-title').textContent = tab === 'playbook' ? 'Conference Playbook 2026' : 'Conference Attendee Guide 2026';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggle(bodyId, hdr) {
+  const body = document.getElementById(bodyId);
+  const chev = hdr.querySelector('.chevron');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chev.classList.toggle('open', !isOpen);
+}
+
+function jump(id, item) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const bodyId = id + 'b';
+  const body = document.getElementById(bodyId);
+  const hdr = el.querySelector('.sec-hdr');
+  if (body && !body.classList.contains('open')) {
+    body.classList.add('open');
+    if (hdr) hdr.querySelector('.chevron').classList.add('open');
+  }
+  setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 40);
+  const navId = document.getElementById('nav-playbook').style.display === 'none' ? 'nav-attendee' : 'nav-playbook';
+  document.querySelectorAll('#' + navId + ' .nav-item').forEach(n => n.classList.remove('on'));
+  item.classList.add('on');
+}
+
+function search(q) {
+  const panel = document.querySelector('.panel.on');
+  const sections = panel.querySelectorAll('.section');
+  if (!q.trim()) { sections.forEach(s => s.classList.remove('hidden')); return; }
+  const lq = q.toLowerCase();
+  sections.forEach(s => {
+    const match = s.textContent.toLowerCase().includes(lq);
+    s.classList.toggle('hidden', !match);
+    if (match) {
+      const bodyId = s.id + 'b';
+      const body = document.getElementById(bodyId);
+      const hdr = s.querySelector('.sec-hdr');
+      if (body) { body.classList.add('open'); }
+      if (hdr) hdr.querySelector('.chevron').classList.add('open');
+    }
+  });
+}
+</script>
+</body>
+</html>
